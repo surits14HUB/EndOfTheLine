@@ -45,7 +45,7 @@ namespace RacingOnline.Networking
         /// Executed When the host presses the Start Game Button
         /// Checks if all the joined network players are ready (isReady toggled)
         /// </summary>
-        internal void OnStartGamePressed()
+        internal bool OnStartGamePressed()
         {
             var count = 0;
 
@@ -66,13 +66,15 @@ namespace RacingOnline.Networking
 #endif
                 NetworkController.Instance.LockRoom();
                 LevelManager.Instance.LoadRaceScene(AppConstants.RACE);
+                return true;
             }
             else
             {
 #if DEV_LOGS
                 Debug.LogError($"Few Players are not Ready");
 #endif
-                Lobby.LobbyController.ChangeUIStage?.Invoke(Lobby.UIStage.WAIT_FOR_OTHERS);
+                // Lobby.LobbyController.ChangeUIStage?.Invoke(Lobby.UIStage.WAIT_FOR_OTHERS);
+                return false;
             }
         }
         /// <summary>

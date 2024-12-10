@@ -19,6 +19,9 @@ namespace RacingOnline.Networking
         [SerializeField] GameObject playerListPanel;
         [SerializeField] GameObject hostInfoText;
         [SerializeField] GameObject clientInfoText;
+        [SerializeField] GameObject markReadyInfoText;
+        [SerializeField] GameObject waitingInfoText;
+        [SerializeField] GameObject notMarkedReadyErrorInfoText;
 
         #endregion
 
@@ -37,6 +40,8 @@ namespace RacingOnline.Networking
                 sessionCodeText.text = $"Session Code : {settings.sessionName}";
                 clientInfoText.SetActive(true);
             }
+            markReadyInfoText.SetActive(false);
+            waitingInfoText.SetActive(false);
 
             markReadyToggle.onValueChanged.AddListener(OnMarkReady);
 
@@ -61,7 +66,8 @@ namespace RacingOnline.Networking
         private void OnStartGamePressed()
         {
             this.gameObject.SetActive(true);
-            PlayersManager.Instance.OnStartGamePressed();
+            var value = PlayersManager.Instance.OnStartGamePressed();
+            notMarkedReadyErrorInfoText.SetActive(!value);
         }
         /// <summary>
         /// Called the Mark Ready toggle value changes
@@ -73,6 +79,12 @@ namespace RacingOnline.Networking
             {
                 startGameButton.interactable = value;
             }
+            else
+            {
+                waitingInfoText.SetActive(value);
+            }
+            markReadyInfoText.SetActive(!value);
+            startGameButton.gameObject.SetActive(value && settings.playerType == PlayerType.HOST);
 
             PlayersManager.Instance.OnMarkReady(value);
         }
@@ -88,9 +100,10 @@ namespace RacingOnline.Networking
                 markReadyToggle.gameObject.SetActive(true);
                 sessionCodeText.gameObject.SetActive(true);
                 playerListPanel.SetActive(true);
+                markReadyInfoText.SetActive(true);
+                waitingInfoText.SetActive(false);
                 hostInfoText.SetActive(false);
                 clientInfoText.SetActive(false);
-                startGameButton.gameObject.SetActive(settings.playerType == PlayerType.HOST);
                 PlayersManager.Instance.OnPlayerJoined -= UpdateUI;
             }
         }

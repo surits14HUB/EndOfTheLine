@@ -218,9 +218,19 @@ namespace RacingOnline.Networking
                     }
                     break;
                 // Apart of the above three cases, all the other cases will execute this code
+                // Apart from the above three cases, all the other cases will execute this code
                 default:
                     {
                         UnityEngine.SceneManagement.SceneManager.LoadScene(AppConstants.LOBBY);
+
+                        // Fix to create consecutive games in one application session
+                        // In the event, the spawnedPlayers list on the client side still has two empty elements when the Back TO Main Menu button is clicked after the race
+                        // So If the client becomes the host, On toggling mark ready and clicking Start Game Button, null exception error occurs as the code loops through all the
+                        // network player elements in the spawnedPlayers list to check if isReady is true.
+                        if (PlayersManager.Instance != null)
+                        {
+                            PlayersManager.Instance.spawnedPlayers.Clear();
+                        }
 
                         if (runner)
                             Destroy(runner.gameObject);

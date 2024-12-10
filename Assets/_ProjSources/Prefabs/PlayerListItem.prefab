@@ -438,6 +438,7 @@ MonoBehaviour:
   playerNameText: {fileID: 6835784874175748573}
   playerColor: {fileID: 8743952578918244740}
   playerIndexText: {fileID: 1266137377211989411}
+  lockIcon: {fileID: 4091145746755013367}
 --- !u!1 &6400791919947634529
 GameObject:
   m_ObjectHideFlags: 0

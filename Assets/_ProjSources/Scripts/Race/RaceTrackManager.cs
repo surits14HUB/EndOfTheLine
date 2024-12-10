@@ -1,3 +1,4 @@
+using System.Collections;
 using Fusion;
 using RacingOnline.Networking;
 using UnityEngine;
@@ -88,6 +89,11 @@ namespace RacingOnline.Race
             {
                 raceUIController.LocalPlayerCompletedRace?.Invoke();
             }
+            StartCoroutine(WaitAndGetTotalTime(networkRaceTime));
+        }
+        private IEnumerator WaitAndGetTotalTime(NetworkRaceTime networkRaceTime)
+        {
+            yield return new WaitForSeconds(0.1f);
             // Sharing the car details upon completion to the shown the time taken and driver's name
             var details = new RaceCompletionDetails();
             details.driverName = networkRaceTime.GetComponent<NetworkCar>().username.ToString();
